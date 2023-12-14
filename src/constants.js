@@ -2,7 +2,7 @@ export const TINYMCE_API_KEY =
   "7ljmbbttb7o13o43rs6prrd95htqgw44qgwip3s9qmd9hig3";
   
 export const tinymceEditorConfig = {
-  height: 500,
+  height: 400,
   menubar: false,
   plugins:
     "tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss",
