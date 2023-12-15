@@ -27,7 +27,7 @@ const NavBar = () => {
       align="center"
       justify="space-between"
       wrap="wrap"
-      padding={{ base: "1rem", md: "2rem" }}
+      padding={{ base: "1rem", md: "1.5rem" }}
       bg="blue.500"
       color="white"
       position="sticky"
