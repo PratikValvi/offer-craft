@@ -1,10 +1,25 @@
-import React from "react";
+import React, { useRef } from "react";
 import TinymceEditor from "./Components/TinymceEditor";
 import OfferLetterForm from "./Components/OfferLetterForm";
 import { Container, Grid } from "@chakra-ui/react";
 import NavBar from "./Components/NavBar";
+import { enableButton, disableButton } from "./utility";
 
 const App = () => {
+  const addVariableButtonRef = useRef(null);
+
+  const handleSelectionChange = (e, editor) => {
+    if (addVariableButtonRef.current) {
+      const selectionContent = editor.selection.getContent();
+      const addVariableButton = addVariableButtonRef.current;
+      if (selectionContent && selectionContent.length > 0) {
+        enableButton(addVariableButton);
+      } else {
+        disableButton(addVariableButton);
+      }
+    }
+  };
+
   return (
     <>
       <NavBar />
@@ -14,8 +29,8 @@ const App = () => {
           gap={4}
           w="100%"
         >
-          <TinymceEditor />
-          <OfferLetterForm />
+          <TinymceEditor handleSelectionChange={handleSelectionChange} />
+          <OfferLetterForm ref={addVariableButtonRef} />
         </Grid>
       </Container>
     </>
