@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
+import { CheckIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
-  CheckIcon,
-  DeleteIcon,
-  EditIcon,
-} from '@chakra-ui/icons';
-import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
   Box,
   Flex,
   FormControl,
@@ -13,10 +13,28 @@ import {
   Heading,
   IconButton,
   Input,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
-import { useFormContext } from '../Contexts/FormContext';
-import { actionType } from '../Reducers/FormReducer';
+import { useFormContext } from "../Contexts/FormContext";
+import { actionType } from "../Reducers/FormReducer";
+
+const NoVariablesAlert = ({ showAlert }) => {
+  if (!showAlert) {
+    return null;
+  }
+
+  return (
+    <Alert status="info" justifyContent="center">
+      <Flex direction="column">
+        <Flex justifyContent="center" alignItems="center">
+          <AlertIcon />
+          <AlertTitle>No variables available!</AlertTitle>
+        </Flex>
+        <AlertDescription>Please add variables to proceed.</AlertDescription>
+      </Flex>
+    </Alert>
+  );
+};
 
 const OfferLetterForm = () => {
   const { state, dispatch } = useFormContext();
@@ -46,11 +64,14 @@ const OfferLetterForm = () => {
     dispatch({ type: actionType.DELETE_VARIABLE, payload: variableId });
   };
 
+  const showAlert = variablesList.length > 0 ? false : true;
+
   return (
-    <Box>
+    <Box pr={2}>
       <Heading as="h2" textAlign="center" mb={4}>
         Variables
       </Heading>
+      <NoVariablesAlert showAlert={showAlert} />
       <Box overflowY="auto" maxHeight="400px">
         {variablesList.map((variable) => (
           <Flex
