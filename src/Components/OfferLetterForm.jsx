@@ -1,16 +1,22 @@
-import React from "react";
+import React from 'react';
+
+import {
+  CheckIcon,
+  DeleteIcon,
+  EditIcon,
+} from '@chakra-ui/icons';
 import {
   Box,
   Flex,
   FormControl,
   FormLabel,
-  Input,
-  IconButton,
   Heading,
-} from "@chakra-ui/react";
-import { EditIcon, CheckIcon, DeleteIcon } from "@chakra-ui/icons";
-import { useFormContext } from "../Contexts/FormContext";
-import { actionType } from "../Reducers/FormReducer";
+  IconButton,
+  Input,
+} from '@chakra-ui/react';
+
+import { useFormContext } from '../Contexts/FormContext';
+import { actionType } from '../Reducers/FormReducer';
 
 const OfferLetterForm = () => {
   const { state, dispatch } = useFormContext();

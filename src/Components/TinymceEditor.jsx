@@ -1,12 +1,15 @@
 import React, { useRef } from "react";
-import { Editor } from "@tinymce/tinymce-react";
-import { TINYMCE_API_KEY, tinymceEditorConfig } from "../constants";
-import { Box, Flex, Button } from "@chakra-ui/react";
-import CustomSelect from "./Shared/CustomSelect";
-import { enableButton, disableButton, extractTextFromHTML } from "../utility";
-import { useFormContext } from "../Contexts/FormContext";
+
 import { v4 as uuidv4 } from "uuid";
+
+import { Box, Button, Flex } from "@chakra-ui/react";
+import { Editor } from "@tinymce/tinymce-react";
+
+import { TINYMCE_API_KEY, tinymceEditorConfig } from "../constants";
+import { useFormContext } from "../Contexts/FormContext";
 import { actionType } from "../Reducers/FormReducer";
+import { disableButton, enableButton, extractTextFromHTML } from "../utility";
+import CustomSelect from "./Shared/CustomSelect";
 
 const TinymceEditor = () => {
   const tinymceEditorRef = useRef(null);

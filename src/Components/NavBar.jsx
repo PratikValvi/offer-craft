@@ -1,12 +1,13 @@
 import React, { useState } from "react";
+
+import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import {
-  Flex,
   Box,
+  Flex,
   Heading,
   IconButton,
   useDisclosure,
 } from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 
 const NavBar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
