@@ -11,3 +11,9 @@ export const disableButton = (button) => {
   button.style.cursor = "not-allowed";
   button.style.pointerEvents = "none";
 };
+
+export const extractTextFromHTML = (htmlContent) => {
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = htmlContent;
+  return tempDiv.textContent || tempDiv.innerText || '';
+};
