@@ -1,19 +1,29 @@
-import React, { useRef, forwardRef } from "react";
+import React, { useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { TINYMCE_API_KEY, tinymceEditorConfig } from "../constants";
 import { Box, Flex, Button } from "@chakra-ui/react";
 import CustomSelect from "./Shared/CustomSelect";
-import { extractTextFromHTML } from "../utility";
+import { enableButton, disableButton, extractTextFromHTML } from "../utility";
+import { useFormContext } from "../Contexts/FormContext";
+import { v4 as uuidv4 } from "uuid";
+import { actionType } from "../Reducers/FormReducer";
 
-const TinymceEditor = forwardRef((props, ref) => {
-  const {
-    handleAddField,
-    handleSelectionChange,
-    handleSelectTemplate,
-    handleSaveAsTemplate,
-  } = props;
-
+const TinymceEditor = () => {
   const tinymceEditorRef = useRef(null);
+  const addVariableButtonRef = useRef(null);
+  const { dispatch } = useFormContext();
+
+  const handleSelectionChange = (e, editor) => {
+    if (addVariableButtonRef.current) {
+      const selectionContent = editor.selection.getContent();
+      const addVariableButton = addVariableButtonRef.current;
+      if (selectionContent && selectionContent.length > 0) {
+        enableButton(addVariableButton);
+      } else {
+        disableButton(addVariableButton);
+      }
+    }
+  };
 
   const onEditorInit = (event, editor) => {
     tinymceEditorRef.current = editor;
@@ -22,11 +32,17 @@ const TinymceEditor = forwardRef((props, ref) => {
     });
   };
 
-  const handleAddVariableButtonClick = () => {
+  const handleAddVariable = () => {
     const editor = tinymceEditorRef.current;
     const selectionContent = editor.selection.getContent();
     const text = extractTextFromHTML(selectionContent);
-    const id = handleAddField(text);
+    const id = uuidv4();
+    const newVariable = {
+      id: id,
+      label: "Label",
+      value: text,
+    };
+    dispatch({ type: actionType.ADD_VARIABLE, payload: newVariable });
     const contentToReplace = `<dfn id="${id}">${text}</dfn>`;
     editor.selection.setContent(contentToReplace);
   };
@@ -39,8 +55,8 @@ const TinymceEditor = forwardRef((props, ref) => {
     <Box>
       <Flex justifyContent="flex-start" mb={4}>
         <Button
-          ref={ref}
-          onClick={handleAddVariableButtonClick}
+          ref={addVariableButtonRef}
+          onClick={handleAddVariable}
           mr={4}
           variant="solid"
         >
@@ -50,10 +66,10 @@ const TinymceEditor = forwardRef((props, ref) => {
           width="200px"
           mr={4}
           options={["Template 1", "Template 2", "Template 3"]}
-          onSelect={handleSelectTemplate}
+          onSelect={() => {}}
         />
         <Button
-          onClick={handleSaveAsTemplate}
+          onClick={() => {}}
           mr={4}
           variant="solid"
           colorScheme="teal"
@@ -78,6 +94,6 @@ const TinymceEditor = forwardRef((props, ref) => {
       />
     </Box>
   );
-});
+};
 
 export default TinymceEditor;

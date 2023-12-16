@@ -9,16 +9,36 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { EditIcon, CheckIcon, DeleteIcon } from "@chakra-ui/icons";
+import { useFormContext } from "../Contexts/FormContext";
+import { actionType } from "../Reducers/FormReducer";
 
-const OfferLetterForm = (props) => {
-  const {
-    editingField,
-    formFields,
-    handleEditField,
-    handleLabelChange,
-    handleInputChange,
-    handleDeleteField,
-  } = props;
+const OfferLetterForm = () => {
+  const { state, dispatch } = useFormContext();
+  const { editingVariableId, variablesList } = state;
+
+  const handleEditVariable = (variableId) => {
+    dispatch({ type: actionType.SET_EDITING_VARIABLE_ID, payload: variableId });
+  };
+
+  const handleLabelChange = (e, variableId) => {
+    const payload = {
+      variableId: variableId,
+      newLabel: e.target.value,
+    };
+    dispatch({ type: actionType.SET_VARIABLE_LABEL, payload: payload });
+  };
+
+  const handleValueChange = (e, variableId) => {
+    const payload = {
+      variableId: variableId,
+      newValue: e.target.value,
+    };
+    dispatch({ type: actionType.SET_VARIABLE_VALUE, payload: payload });
+  };
+
+  const handleDeleteVariable = (variableId) => {
+    dispatch({ type: actionType.DELETE_VARIABLE, payload: variableId });
+  };
 
   return (
     <Box>
@@ -26,51 +46,57 @@ const OfferLetterForm = (props) => {
         Variables
       </Heading>
       <Box overflowY="auto" maxHeight="400px">
-        {formFields.map((field) => (
+        {variablesList.map((variable) => (
           <Flex
-            key={field.id}
+            key={variable.id}
             mb={4}
             alignItems="flex-start"
             flexDirection="column"
           >
-            {editingField === field.id ? (
+            {editingVariableId === variable.id ? (
               <FormControl mb={3} pr={2}>
                 <Input
-                  value={field.label}
-                  onChange={(e) => handleLabelChange(field.id, e.target.value)}
+                  value={variable.label}
+                  onChange={(e) => handleLabelChange(e, variable.id)}
                   px={2}
                 />
               </FormControl>
             ) : (
               <Box mb={2}>
-                <FormLabel>{field.label}</FormLabel>
+                <FormLabel>{variable.label}</FormLabel>
               </Box>
             )}
             <Flex alignItems="center" width="100%" mb={2}>
               <FormControl
-                isDisabled={editingField !== field.id}
+                isDisabled={editingVariableId !== variable.id}
                 flex="1"
                 mr={{ base: 0, md: 4 }}
               >
                 <Input
-                  value={field.value}
-                  onChange={(e) => handleInputChange(e, field.id)}
+                  value={variable.value}
+                  onChange={(e) => handleValueChange(e, variable.id)}
                   px={2}
                 />
               </FormControl>
               <IconButton
                 aria-label={
-                  editingField === field.id ? "Finish Editing" : "Edit"
+                  editingVariableId === variable.id ? "Finish Editing" : "Edit"
                 }
-                icon={editingField === field.id ? <CheckIcon /> : <EditIcon />}
-                onClick={() => handleEditField(field.id)}
+                icon={
+                  editingVariableId === variable.id ? (
+                    <CheckIcon />
+                  ) : (
+                    <EditIcon />
+                  )
+                }
+                onClick={() => handleEditVariable(variable.id)}
                 alignSelf="center"
                 mr={2}
               />
               <IconButton
                 aria-label="Delete"
                 icon={<DeleteIcon />}
-                onClick={() => handleDeleteField(field.id)}
+                onClick={() => handleDeleteVariable(variable.id)}
                 alignSelf="center"
                 mr={2}
               />
