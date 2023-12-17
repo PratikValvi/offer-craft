@@ -84,6 +84,7 @@ const TinymceEditor = () => {
         "text/html"
       ).body;
       editor.setContent(editorBodyElement.innerHTML, { format: "html" });
+      dispatch({ type: actionType.CLEAR_VARIABLES });
     } catch (error) {
       console.log("Error Parsing JSON to Editor Body: ", error);
     }

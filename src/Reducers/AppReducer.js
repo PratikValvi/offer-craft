@@ -8,12 +8,14 @@ export const initialState = {
     value: "",
   },
   variablesList: [],
-  templatesList: [{
-    name: defaultTempleName,
-    body: defaultTemplateJSON
-  }],
+  templatesList: [
+    {
+      name: defaultTempleName,
+      body: defaultTemplateJSON,
+    },
+  ],
   templatesNameRecord: {
-    [defaultTempleName]: defaultTemplateJSON
+    [defaultTempleName]: defaultTemplateJSON,
   },
 };
 
@@ -24,6 +26,7 @@ export const actionType = {
   SET_VARIABLE_VALUE: "SET_VARIABLE_VALUE",
   DELETE_VARIABLE: "DELETE_VARIABLE",
   ADD_TEMPLATE: "ADD_TEMPLATE",
+  CLEAR_VARIABLES: "CLEAR_VARIABLES",
 };
 
 export const reducer = (state, action) => {
@@ -111,6 +114,18 @@ export const reducer = (state, action) => {
         ...state,
         templatesList: [newTemplate, ...templatesList],
         templatesNameRecord: newRecord,
+      };
+    }
+    case actionType.CLEAR_VARIABLES: {
+      return {
+        ...state,
+        editingVariableId: "",
+        editingVariable: {
+          id: "",
+          label: "",
+          value: "",
+        },
+        variablesList: [],
       };
     }
     default:
