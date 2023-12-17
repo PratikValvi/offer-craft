@@ -137,6 +137,7 @@ const TinymceEditor = () => {
           onClick={handleAddVariable}
           mr={4}
           variant="solid"
+          isDisabled={!isLoaded}
         >
           Add Variable
         </Button>
@@ -145,12 +146,14 @@ const TinymceEditor = () => {
           mr={4}
           options={templateNamesList}
           onSelect={handleSelectTemplate}
+          isDisabled={!isLoaded}
         />
         <Button
           onClick={onOpen}
           mr={4}
           variant="solid"
           colorScheme="teal"
+          isDisabled={!isLoaded}
           _hover={{ bg: "teal.500" }}
         >
           Save As Template
@@ -159,6 +162,7 @@ const TinymceEditor = () => {
           onClick={handleExportPDF}
           variant="solid"
           colorScheme="purple"
+          isDisabled={!isLoaded}
           _hover={{ bg: "purple.500" }}
         >
           Export PDF
