@@ -1,10 +1,15 @@
 export const initialState = {
   editingVariableId: "",
+  editingVariable: {
+    id: "",
+    label: "",
+    value: ""
+  },
   variablesList: [],
 };
 
 export const actionType = {
-  SET_EDITING_VARIABLE_ID: "SET_EDITING_FIELD_ID",
+  SET_EDITING_VARIABLE_ID: "SET_EDITING_VARIABLE_ID",
   ADD_VARIABLE: "ADD_VARIABLE",
   SET_VARIABLE_LABEL: "SET_VARIABLE_LABEL",
   SET_VARIABLE_VALUE: "SET_VARIABLE_VALUE",
@@ -22,15 +27,20 @@ export const reducer = (state, action) => {
       };
     }
     case actionType.SET_EDITING_VARIABLE_ID: {
-      const { editingVariableId } = state;
+      const { editingVariableId, editingVariable } = state;
       const id = action.payload;
+      const newId = editingVariableId === id ? "" : id;
       return {
         ...state,
-        editingVariableId: editingVariableId === id ? "" : id,
+        editingVariableId: newId,
+        editingVariable: {
+          ...editingVariable,
+          id: newId,
+        },
       };
     }
     case actionType.SET_VARIABLE_LABEL: {
-      const { variablesList } = state;
+      const { variablesList, editingVariable } = state;
       const { variableId, newLabel } = action.payload;
       const updatedVariableList = variablesList.map((variable) => {
         if (variable.id === variableId) {
@@ -44,10 +54,14 @@ export const reducer = (state, action) => {
       return {
         ...state,
         variablesList: updatedVariableList,
+        editingVariable: {
+          ...editingVariable,
+          label: newLabel
+        }
       };
     }
     case actionType.SET_VARIABLE_VALUE: {
-      const { variablesList } = state;
+      const { variablesList, editingVariable } = state;
       const { variableId, newValue } = action.payload;
       const updatedVariableList = variablesList.map((variable) => {
         if (variable.id === variableId) {
@@ -61,6 +75,10 @@ export const reducer = (state, action) => {
       return {
         ...state,
         variablesList: updatedVariableList,
+        editingVariable: {
+          ...editingVariable,
+          value: newValue
+        }
       };
     }
     case actionType.DELETE_VARIABLE: {

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -14,7 +14,16 @@ import CustomSelect from "./Shared/CustomSelect";
 const TinymceEditor = () => {
   const tinymceEditorRef = useRef(null);
   const addVariableButtonRef = useRef(null);
-  const { dispatch } = useFormContext();
+  const { state, dispatch } = useFormContext();
+
+  useEffect(() => {
+    if (state.editingVariable.id && state.editingVariable.value) {
+      const editor = tinymceEditorRef.current;
+      const id = state.editingVariable.id;
+      const newValue = state.editingVariable.value;
+      editor.dom.setHTML(editor.dom.get(id), newValue);
+    }
+  }, [state.editingVariable]);
 
   const handleSelectionChange = (e, editor) => {
     if (addVariableButtonRef.current) {
