@@ -7,7 +7,7 @@ const CustomSelect = ({ width, mr, options, onSelect }) => {
       width={width}
       mr={mr}
       placeholder="Select Template"
-      onChange={(e) => onSelect(e.target.value)}
+      onChange={onSelect}
     >
       {options.map((option) => (
         <option key={option} value={option}>

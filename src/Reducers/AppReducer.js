@@ -1,3 +1,5 @@
+import { defaultTemplateJSON, defaultTempleName } from "../constants";
+
 export const initialState = {
   editingVariableId: "",
   editingVariable: {
@@ -6,8 +8,13 @@ export const initialState = {
     value: "",
   },
   variablesList: [],
-  templatesList: [],
-  templatesNameRecord: {},
+  templatesList: [{
+    name: defaultTempleName,
+    body: defaultTemplateJSON
+  }],
+  templatesNameRecord: {
+    [defaultTempleName]: defaultTemplateJSON
+  },
 };
 
 export const actionType = {
@@ -99,7 +106,7 @@ export const reducer = (state, action) => {
       const { templatesList, templatesNameRecord } = state;
       const newTemplate = action.payload;
       const newRecord = { ...templatesNameRecord };
-      newRecord[newTemplate.name] = newTemplate.name;
+      newRecord[newTemplate.name] = newTemplate.body;
       return {
         ...state,
         templatesList: [newTemplate, ...templatesList],

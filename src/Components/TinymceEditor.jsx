@@ -14,7 +14,7 @@ import { useAppContext } from "../Contexts/AppContext";
 import { actionType } from "../Reducers/AppReducer";
 import { disableButton, enableButton, extractTextFromHTML } from "../utility";
 import CustomSelect from "./Shared/CustomSelect";
-import { HTMLToJSON } from "html-to-json-parser";
+import { HTMLToJSON, JSONToHTML } from "html-to-json-parser";
 import SaveAsTemplateModal from "./Shared/SaveAsTemplateModal";
 
 const TinymceEditor = () => {
@@ -69,10 +69,31 @@ const TinymceEditor = () => {
     editor.selection.setContent(contentToReplace);
   };
 
-  const handleSave = async () => {
-    const editor = tinymceEditorRef.current;
-    const editorBodyHTML = editor.getBody();
+  const handleSelectTemplate = async (e) => {
+    const templateName = e.target.value;
+    if (!templateName) return;
     try {
+      const editor = tinymceEditorRef.current;
+      const template = state.templatesList.find(
+        (template) => template.name === templateName
+      );
+      const editorBodyJSON = template.body;
+      const editorBodyHTML = await JSONToHTML(editorBodyJSON, true);
+      const editorBodyElement = new DOMParser().parseFromString(
+        editorBodyHTML,
+        "text/html"
+      ).body;
+      editor.setContent(editorBodyElement.innerHTML, { format: "html" });
+    } catch (error) {
+      console.log("Error Parsing JSON to Editor Body: ", error);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      const editor = tinymceEditorRef.current;
+      editor.dom.setOuterHTML(editor.dom.select("dfn"), "______");
+      const editorBodyHTML = editor.getBody();
       const editorBodyJSON = await HTMLToJSON(editorBodyHTML, true);
       const templateObj = {
         name: templateName,
@@ -91,7 +112,9 @@ const TinymceEditor = () => {
     console.log("Export PDF");
   };
 
-  const templateNamesList = state.templatesList.map(template => template.name);
+  const templateNamesList = state.templatesList.map(
+    (template) => template.name
+  );
   return (
     <Box>
       <Flex justifyContent="flex-start" mb={4}>
@@ -107,7 +130,7 @@ const TinymceEditor = () => {
           width="200px"
           mr={4}
           options={templateNamesList}
-          onSelect={() => {}}
+          onSelect={handleSelectTemplate}
         />
         <Button
           onClick={onOpen}
