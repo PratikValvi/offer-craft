@@ -16,6 +16,7 @@ import { disableButton, enableButton, extractTextFromHTML } from "../utility";
 import CustomSelect from "./Shared/CustomSelect";
 import { HTMLToJSON, JSONToHTML } from "html-to-json-parser";
 import SaveAsTemplateModal from "./Shared/SaveAsTemplateModal";
+import { jsPDF } from "jspdf";
 
 const TinymceEditor = () => {
   const tinymceEditorRef = useRef(null);
@@ -110,7 +111,19 @@ const TinymceEditor = () => {
   };
 
   const handleExportPDF = () => {
-    console.log("Export PDF");
+    const editor = tinymceEditorRef.current;
+    const editorContent = editor.getContent();
+    const text = extractTextFromHTML(editorContent);
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
+    });
+    const maxWidth = 200;
+    const splitText = doc.splitTextToSize(text, maxWidth);
+    doc.setFontSize(14);
+    doc.text(splitText, 20, 20);
+    doc.save("OfferLeter.pdf");
   };
 
   const templateNamesList = state.templatesList.map(
