@@ -2,25 +2,28 @@ import React, { useRef, useEffect, useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 
-import {
-  Box,
-  Button,
-  Flex,
-  Skeleton,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Skeleton, useDisclosure } from "@chakra-ui/react";
 import { Editor } from "@tinymce/tinymce-react";
 
-import { TINYMCE_API_KEY, tinymceEditorConfig } from "../constants";
-import { useFormContext } from "../Contexts/FormContext";
-import { actionType } from "../Reducers/FormReducer";
+import {
+  TINYMCE_API_KEY,
+  tinymceEditorConfig,
+  initialValue,
+} from "../constants";
+import { useAppContext } from "../Contexts/AppContext";
+import { actionType } from "../Reducers/AppReducer";
 import { disableButton, enableButton, extractTextFromHTML } from "../utility";
 import CustomSelect from "./Shared/CustomSelect";
+import { HTMLToJSON } from "html-to-json-parser";
+import SaveAsTemplateModal from "./Shared/SaveAsTemplateModal";
 
 const TinymceEditor = () => {
   const tinymceEditorRef = useRef(null);
   const addVariableButtonRef = useRef(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const { state, dispatch } = useFormContext();
+  const { state, dispatch } = useAppContext();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [templateName, setTemplateName] = useState("");
 
   useEffect(() => {
     if (state.editingVariable.id && state.editingVariable.value) {
@@ -66,10 +69,29 @@ const TinymceEditor = () => {
     editor.selection.setContent(contentToReplace);
   };
 
+  const handleSave = async () => {
+    const editor = tinymceEditorRef.current;
+    const editorBodyHTML = editor.getBody();
+    try {
+      const editorBodyJSON = await HTMLToJSON(editorBodyHTML, true);
+      const templateObj = {
+        name: templateName,
+        body: editorBodyJSON,
+      };
+      dispatch({ type: actionType.ADD_TEMPLATE, payload: templateObj });
+    } catch (error) {
+      console.log("Error Parsing Editor Body to JSON: ", error);
+    } finally {
+      setTemplateName("");
+      onClose();
+    }
+  };
+
   const handleExportPDF = () => {
     console.log("Export PDF");
   };
 
+  const templateNamesList = state.templatesList.map(template => template.name);
   return (
     <Box>
       <Flex justifyContent="flex-start" mb={4}>
@@ -84,11 +106,11 @@ const TinymceEditor = () => {
         <CustomSelect
           width="200px"
           mr={4}
-          options={["Template 1", "Template 2", "Template 3"]}
+          options={templateNamesList}
           onSelect={() => {}}
         />
         <Button
-          onClick={() => {}}
+          onClick={onOpen}
           mr={4}
           variant="solid"
           colorScheme="teal"
@@ -105,14 +127,26 @@ const TinymceEditor = () => {
           Export PDF
         </Button>
       </Flex>
-      <Skeleton isLoaded={isLoaded} fadeDuration={2} height={tinymceEditorConfig.height}>
+      <Skeleton
+        isLoaded={isLoaded}
+        fadeDuration={2}
+        height={tinymceEditorConfig.height}
+      >
         <Editor
           apiKey={process.env.TINYMCE_API_KEY ?? TINYMCE_API_KEY}
           onInit={onEditorInit}
-          initialValue="<p>This is the initial content of the editor.</p>"
+          initialValue={initialValue}
           init={tinymceEditorConfig}
         />
       </Skeleton>
+      <SaveAsTemplateModal
+        isOpen={isOpen}
+        onClose={onClose}
+        templateName={templateName}
+        setTemplateName={setTemplateName}
+        handleSave={handleSave}
+        templatesNameRecord={state.templatesNameRecord}
+      />
     </Box>
   );
 };

@@ -3,9 +3,11 @@ export const initialState = {
   editingVariable: {
     id: "",
     label: "",
-    value: ""
+    value: "",
   },
   variablesList: [],
+  templatesList: [],
+  templatesNameRecord: {},
 };
 
 export const actionType = {
@@ -14,6 +16,7 @@ export const actionType = {
   SET_VARIABLE_LABEL: "SET_VARIABLE_LABEL",
   SET_VARIABLE_VALUE: "SET_VARIABLE_VALUE",
   DELETE_VARIABLE: "DELETE_VARIABLE",
+  ADD_TEMPLATE: "ADD_TEMPLATE",
 };
 
 export const reducer = (state, action) => {
@@ -56,8 +59,8 @@ export const reducer = (state, action) => {
         variablesList: updatedVariableList,
         editingVariable: {
           ...editingVariable,
-          label: newLabel
-        }
+          label: newLabel,
+        },
       };
     }
     case actionType.SET_VARIABLE_VALUE: {
@@ -77,8 +80,8 @@ export const reducer = (state, action) => {
         variablesList: updatedVariableList,
         editingVariable: {
           ...editingVariable,
-          value: newValue
-        }
+          value: newValue,
+        },
       };
     }
     case actionType.DELETE_VARIABLE: {
@@ -90,6 +93,17 @@ export const reducer = (state, action) => {
       return {
         ...state,
         variablesList: updatedVariableList,
+      };
+    }
+    case actionType.ADD_TEMPLATE: {
+      const { templatesList, templatesNameRecord } = state;
+      const newTemplate = action.payload;
+      const newRecord = { ...templatesNameRecord };
+      newRecord[newTemplate.name] = newTemplate.name;
+      return {
+        ...state,
+        templatesList: [newTemplate, ...templatesList],
+        templatesNameRecord: newRecord,
       };
     }
     default:

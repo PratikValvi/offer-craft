@@ -4,11 +4,11 @@ import OfferLetterForm from "./Components/OfferLetterForm";
 import { Container, Grid } from "@chakra-ui/react";
 import NavBar from "./Components/NavBar";
 
-import { FormContextProvider } from "./Contexts/FormContext";
+import { AppContextProvider } from "./Contexts/AppContext";
 
 const App = () => {
   return (
-    <FormContextProvider>
+    <AppContextProvider>
       <NavBar />
       <Container maxW="100%" p={2} centerContent>
         <Grid
@@ -20,7 +20,7 @@ const App = () => {
           <OfferLetterForm />
         </Grid>
       </Container>
-    </FormContextProvider>
+    </AppContextProvider>
   );
 };
 

@@ -15,8 +15,8 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-import { useFormContext } from "../Contexts/FormContext";
-import { actionType } from "../Reducers/FormReducer";
+import { useAppContext } from "../Contexts/AppContext";
+import { actionType } from "../Reducers/AppReducer";
 
 const NoVariablesAlert = ({ showAlert }) => {
   if (!showAlert) {
@@ -37,7 +37,7 @@ const NoVariablesAlert = ({ showAlert }) => {
 };
 
 const OfferLetterForm = () => {
-  const { state, dispatch } = useFormContext();
+  const { state, dispatch } = useAppContext();
   const { editingVariableId, variablesList } = state;
 
   const handleEditVariable = (variableId) => {
