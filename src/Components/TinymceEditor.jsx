@@ -1,8 +1,13 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 
-import { Box, Button, Flex } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Skeleton,
+} from "@chakra-ui/react";
 import { Editor } from "@tinymce/tinymce-react";
 
 import { TINYMCE_API_KEY, tinymceEditorConfig } from "../constants";
@@ -14,6 +19,7 @@ import CustomSelect from "./Shared/CustomSelect";
 const TinymceEditor = () => {
   const tinymceEditorRef = useRef(null);
   const addVariableButtonRef = useRef(null);
+  const [isLoaded, setIsLoaded] = useState(false);
   const { state, dispatch } = useFormContext();
 
   useEffect(() => {
@@ -42,6 +48,7 @@ const TinymceEditor = () => {
     editor.on("selectionchange", (e) => {
       handleSelectionChange(e, tinymceEditorRef.current);
     });
+    setIsLoaded(true);
   };
 
   const handleAddVariable = () => {
@@ -98,12 +105,14 @@ const TinymceEditor = () => {
           Export PDF
         </Button>
       </Flex>
-      <Editor
-        apiKey={process.env.TINYMCE_API_KEY ?? TINYMCE_API_KEY}
-        onInit={onEditorInit}
-        initialValue="<p>This is the initial content of the editor.</p>"
-        init={tinymceEditorConfig}
-      />
+      <Skeleton isLoaded={isLoaded} fadeDuration={2} height={tinymceEditorConfig.height}>
+        <Editor
+          apiKey={process.env.TINYMCE_API_KEY ?? TINYMCE_API_KEY}
+          onInit={onEditorInit}
+          initialValue="<p>This is the initial content of the editor.</p>"
+          init={tinymceEditorConfig}
+        />
+      </Skeleton>
     </Box>
   );
 };
