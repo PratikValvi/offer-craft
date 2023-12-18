@@ -94,3 +94,5 @@ export const defaultTemplateJSON = {
     "spellcheck": "false"
   }
 }
+
+export const linkedInProfileLink = "https://www.linkedin.com/in/pratik-rajendra-valvi/";

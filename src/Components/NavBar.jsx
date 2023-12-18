@@ -8,6 +8,7 @@ import {
   IconButton,
   useDisclosure,
 } from "@chakra-ui/react";
+import { linkedInProfileLink } from "../constants";
 
 const NavBar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -37,7 +38,7 @@ const NavBar = () => {
     >
       <Flex align="center" mr={5}>
         <Heading as="h1" size="lg">
-          OfferCraft
+          <a href="/home">OfferCraft</a>
         </Heading>
       </Flex>
 
@@ -70,18 +71,13 @@ const NavBar = () => {
           </a>
         </Box>
         <Box mb={{ base: 4, md: 0 }} mx={2}>
-          <a href="#features" onClick={onClose}>
+          <a href="/features" onClick={onClose}>
             Features
           </a>
         </Box>
         <Box mb={{ base: 4, md: 0 }} mx={2}>
-          <a href="#about" onClick={onClose}>
+          <a href={linkedInProfileLink} onClick={onClose}>
             About
-          </a>
-        </Box>
-        <Box mb={{ base: 4, md: 0 }} mx={2}>
-          <a href="#contact" onClick={onClose}>
-            Contact
           </a>
         </Box>
       </Box>

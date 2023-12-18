@@ -173,6 +173,14 @@ const TinymceEditor = () => {
         >
           Add Variable
         </Button>
+        <Button
+          mr={4}
+          variant="solid"
+          isDisabled={!isLoaded}
+          colorScheme="blue"
+        >
+          <a href="/import">Import Template</a>
+        </Button>
         <CustomSelect
           width="200px"
           mr={4}
