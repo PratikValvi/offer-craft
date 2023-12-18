@@ -60,8 +60,13 @@ const NavBar = () => {
         mt={{ base: "2rem", md: "0" }}
       >
         <Box mb={{ base: 4, md: 0 }} mx={2}>
-          <a href="#home" onClick={onClose}>
+          <a href="/home" onClick={onClose}>
             Home
+          </a>
+        </Box>
+        <Box mb={{ base: 4, md: 0 }} mx={2}>
+          <a href="/import" onClick={onClose}>
+            Import
           </a>
         </Box>
         <Box mb={{ base: 4, md: 0 }} mx={2}>

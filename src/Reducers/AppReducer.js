@@ -17,6 +17,10 @@ export const initialState = {
   templatesNameRecord: {
     [defaultTempleName]: defaultTemplateJSON,
   },
+  importedTemplate: {
+    name: "",
+    body: "",
+  },
 };
 
 export const actionType = {
@@ -27,6 +31,8 @@ export const actionType = {
   DELETE_VARIABLE: "DELETE_VARIABLE",
   ADD_TEMPLATE: "ADD_TEMPLATE",
   CLEAR_VARIABLES: "CLEAR_VARIABLES",
+  SET_IMPORTED_TEMPLATE: "SET_IMPORTED_TEMPLATE",
+  ADD_IMPORTED_TEMPLATE: "ADD_IMPORTED_TEMPLATE",
 };
 
 export const reducer = (state, action) => {
@@ -126,6 +132,31 @@ export const reducer = (state, action) => {
           value: "",
         },
         variablesList: [],
+      };
+    }
+    case actionType.SET_IMPORTED_TEMPLATE: {
+      const importedTemplate = action.payload;
+      return {
+        ...state,
+        importedTemplate: {
+          name: importedTemplate.name,
+          body: importedTemplate.body,
+        },
+      };
+    }
+    case actionType.ADD_IMPORTED_TEMPLATE: {
+      const { templatesList, templatesNameRecord } = state;
+      const newTemplate = action.payload;
+      const newRecord = { ...templatesNameRecord };
+      newRecord[newTemplate.name] = newTemplate.body;
+      return {
+        ...state,
+        templatesList: [newTemplate, ...templatesList],
+        templatesNameRecord: newRecord,
+        importedTemplate: {
+          name: "",
+          body: "",
+        },
       };
     }
     default:

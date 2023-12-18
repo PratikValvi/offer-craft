@@ -47,12 +47,43 @@ const TinymceEditor = () => {
     }
   };
 
+  const setImportedTemplate = async (template) => {
+    try {
+      const editor = tinymceEditorRef.current;
+      const templateName = template.name;
+      const editorBodyJSON = template.body;
+      const editorBodyHTML = await JSONToHTML(editorBodyJSON, true);
+      const editorBodyElement = new DOMParser().parseFromString(
+        editorBodyHTML,
+        "text/html"
+      ).body;
+      editor.setContent(editorBodyElement.innerHTML, { format: "html" });
+      const templateObj = {
+        name: templateName,
+        body: editorBodyJSON,
+      };
+      dispatch({
+        type: actionType.ADD_IMPORTED_TEMPLATE,
+        payload: templateObj,
+      });
+    } catch (error) {
+      console.log("Error Parsing JSON to Editor Body: ", error);
+    } finally {
+      setIsLoaded(true);
+    }
+  };
+
   const onEditorInit = (event, editor) => {
     tinymceEditorRef.current = editor;
     editor.on("selectionchange", (e) => {
       handleSelectionChange(e, tinymceEditorRef.current);
     });
-    setIsLoaded(true);
+    const importedTemplate = state.importedTemplate;
+    if (importedTemplate.name && importedTemplate.body) {
+      setImportedTemplate(importedTemplate);
+    } else {
+      setIsLoaded(true);
+    }
   };
 
   const handleAddVariable = () => {
