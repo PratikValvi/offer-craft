@@ -63,12 +63,13 @@ const TinymceEditor = () => {
         body: editorBodyJSON,
       };
       dispatch({
-        type: actionType.ADD_IMPORTED_TEMPLATE,
+        type: actionType.ADD_TEMPLATE,
         payload: templateObj,
       });
     } catch (error) {
       console.log("Error Parsing JSON to Editor Body: ", error);
     } finally {
+      dispatch({ type: actionType.CLEAR_IMPORTED_TEMPLATE });
       setIsLoaded(true);
     }
   };

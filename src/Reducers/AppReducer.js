@@ -32,7 +32,7 @@ export const actionType = {
   ADD_TEMPLATE: "ADD_TEMPLATE",
   CLEAR_VARIABLES: "CLEAR_VARIABLES",
   SET_IMPORTED_TEMPLATE: "SET_IMPORTED_TEMPLATE",
-  ADD_IMPORTED_TEMPLATE: "ADD_IMPORTED_TEMPLATE",
+  CLEAR_IMPORTED_TEMPLATE: "CLEAR_IMPORTED_TEMPLATE",
 };
 
 export const reducer = (state, action) => {
@@ -144,15 +144,9 @@ export const reducer = (state, action) => {
         },
       };
     }
-    case actionType.ADD_IMPORTED_TEMPLATE: {
-      const { templatesList, templatesNameRecord } = state;
-      const newTemplate = action.payload;
-      const newRecord = { ...templatesNameRecord };
-      newRecord[newTemplate.name] = newTemplate.body;
+    case actionType.CLEAR_IMPORTED_TEMPLATE: {
       return {
         ...state,
-        templatesList: [newTemplate, ...templatesList],
-        templatesNameRecord: newRecord,
         importedTemplate: {
           name: "",
           body: "",
